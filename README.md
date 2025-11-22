@@ -184,3 +184,4 @@ Divyesh Gohil,
 Jigar Rupareliya 
 
 PPT
+[Presentation - Unified Digital Healthcare Platform.pdf](https://github.com/user-attachments/files/23688616/Presentation.-.Unified.Digital.Healthcare.Platform.pdf)
