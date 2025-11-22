@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MEDIC — Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0A74DA, #1e293b);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 360px;
+    background: #ffffffee;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    backdrop-filter: blur(6px);
+    text-align: center;
+}
+
+.login-logo {
+    width: 90px;
+    margin-bottom: 12px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #0A74DA;
+    font-weight: 700;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #d2d6dc;
+    font-size: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #0A74DA;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.small {
+    margin-top: 12px;
+    color: #444;
+    font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<div class="login-box">
+    <img src="assets/medic_logo.png" class="login-logo">
+
+    <h2>MEDIC Login</h2>
+
+    <form onsubmit="handleLogin(event)">
+        <select id="role">
+            <option value="patient">Patient Login</option>
+            <option value="admin">Admin Login</option>
+            <option value="doctor">Doctor Login</option>
+        </select>
+
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="small">By continuing you agree to MEDIC policies</div>
+<div class="demo-box">
+        <h6>Demo Accounts</h6>
+<h4>email: test@gmail.com pass: 123456</h4>
+        <strong>Patient Login:</strong>
+        <code>Email: patient@demo.com<br>Password: 123456</code>
+<br>
+        <strong>Doctor Login:</strong>
+        <code>Email: doctor@demo.com<br>Password: 123456</code>
+<br>
+        <strong>Admin Login:</strong>
+        <code>Email: admin@demo.com<br>Password: 123456</code>
+    </div>
+</div>
+</div>
+
+<script src="app.js"></script>
+
+<script>
+async function handleLogin(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const role = document.getElementById("role").value;
+
+    if (!email || !password) return alert("Enter credentials");
+
+    const res = await fetch("../backend/auth/login.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ email, password, role })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "success") {
+        // save logged session
+        localStorage.setItem("medic_user", JSON.stringify(data.user));
+
+        // redirect based on role
+        if (data.user.role === "admin") {
+            window.location.href = "admin_dashboard.html";
+        } else if (data.user.role === "doctor") {
+            window.location.href = "doctor_dashboard.html";
+        } else {
+            window.location.href = "dashboard.html";
+        }
+    } else {
+        alert("Invalid login");
+    }
+}
+</script>
+
+</body>
+</html>
